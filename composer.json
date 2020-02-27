@@ -1,0 +1,26 @@
+{
+    "name": "lof/module-shippingcalculator",
+    "description": "",
+    "type": "magento2-module",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mage2Gen",
+            "email": "info@mage2gen.com"
+        },
+        {
+            "name": "Hi\u1ebfu Nguy\u1ec5n",
+            "email": "hieu01412@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Lof\\ShippingCalculator\\": ""
+        },
+        "files": [
+            "registration.php"
+        ]
+    }
+}
