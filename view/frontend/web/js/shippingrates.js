@@ -6,12 +6,15 @@
  */
 
 define([
-    "jquery"
-], function($) {
+    "jquery",
+    'mage/mage',
+    'mage/storage',
+    'Magento_Checkout/js/model/error-processor'
+], function($,storage,errorProcessor) {
     "use strict";
     $.widget('shippingrates.ajax', {
         options: {
-            url: 'http://shippingcc.localhost/shippingrates/shippingrates/shipping',
+            url: 'shippingrates/shippingrates/shipping',
             method: 'post',
             triggerEvent: 'click'
         },
@@ -34,13 +37,17 @@ define([
                 type: self.options.method,
                 dataType: 'json',
                 beforeSend: function() {
-                    console.log('beforeSend');
-                    $('body').trigger('processStart');
+                    console.log('beforeSend loader shippingcalculator');
+                    $("body").trigger('processStart');
                 },
                 success: function(res) {
                     console.log('success');
-                    console.log(res);
-                    $('body').trigger('processStop');
+                    console.log(res.city);
+                    $('#region-state').val(res.city);
+                    var callback = function (){
+
+                    };
+                    $("body").trigger('processStop',callback);
                 }
             });
         },
@@ -49,3 +56,5 @@ define([
 
     return $.shippingrates.ajax;
 });
+
+

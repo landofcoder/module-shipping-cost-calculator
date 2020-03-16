@@ -6,17 +6,17 @@
  * @author    landofcoder@gmail.com
  */
 ?>
-<?php $block->getShippingAddress();?>
 
 
 <?php
+
 $helper = $this->helper('Lof\ShippingCalculator\Helper\Data');
 
 if ($helper->getGeneralConfig('enable') == 1) {
     ?>
     <div class="product-add-form">
             <div id="block-shipping">
-                <div class="shipping-p-20">
+                <div id="shipping-cost-calculator" class="shipping-p-20">
                     <div class="title-m-10">
                         <strong><?php echo $block->getData('title_shipping'); ?></strong>
                     </div>
@@ -70,11 +70,24 @@ if ($helper->getGeneralConfig('enable') == 1) {
 
 
 
+
+
+
 <script type="text/x-magento-init">
 {
     "#ajax-info-action":
     {
         "Lof_ShippingCalculator/js/shippingrates": {}
+    }
+}
+</script>
+
+
+<script type="text/x-magento-init">
+{
+    "#ajax-info-action":
+    {
+        "Lof_ShippingCalculator/js/model/shipping-service": {}
     }
 }
 </script>
