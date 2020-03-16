@@ -33,11 +33,35 @@ class Shipping extends Action
      *
      * @return \Magento\Framework\View\Result\Page
      */
+
+
+
+
+
+
     public function execute()
     {
+
+
+
+
+        $moduleName = $this->request->getModuleName();
+        $controller = $this->request->getControllerName();
+        $action     = $this->request->getActionName();
+        $route      = $this->request->getRouteName();
+
+        echo $moduleName."<br/>";
+        echo $controller."<br/>";
+        echo $action."<br/>";
+        echo $route."<br/>";
+
+        $this->_view->loadLayout();
+        $this->_view->renderLayout();
+        die;
         $data = [
-            'key1' => 'value1',
-            'key2' => 'value2'
+            'city' => 'New York',
+            'country_id' => 'US',
+            'postcode' => '98001'
         ];
         $resultJson = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_JSON);
         $resultJson->setData($data);

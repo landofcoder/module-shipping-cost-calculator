@@ -11,5 +11,9 @@ use Magento\Framework\View\Element\Template;
 
 class Shipping extends Template
 {
-
+    public function getShippingAddress()
+    {
+        echo 'hello';
+        die();
+    }
 }

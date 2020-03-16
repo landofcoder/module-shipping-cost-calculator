@@ -6,6 +6,7 @@
  * @author    landofcoder@gmail.com
  */
 ?>
+<?php $block->getShippingAddress();?>
 
 
 <?php
@@ -55,7 +56,7 @@ if ($helper->getGeneralConfig('enable') == 1) {
                             <?php } ?>
 
                             <div class="shipping-button">
-                                    <button type="submit" id="ajax-info-action shipping-calculate-button " class="action btn-danger submit shipping-calculate-button">
+                                    <button id="ajax-info-action" class="action btn-danger submit shipping-calculate-button">
                                         <span><?php echo $block->getData('button_title'); ?></span>
                                     </button>
                                 </div>
@@ -68,15 +69,12 @@ if ($helper->getGeneralConfig('enable') == 1) {
 ?>
 
 
-<div class="ajax-info">
-    <button id="ajax-info-action" type="button">Get Ajax Info</button>
-</div>
 
 <script type="text/x-magento-init">
 {
     "#ajax-info-action":
     {
-        "Lof_ShippingCalculator/js/hello": { }
+        "Lof_ShippingCalculator/js/shippingrates": {}
     }
 }
 </script>

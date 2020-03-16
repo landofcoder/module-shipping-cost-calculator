@@ -1,5 +1,5 @@
 /**
- * hello
+ * shippingrates
  *
  * @copyright Copyright © 2020 landofcoder. All rights reserved.
  * @author    landofcoder@gmail.com
@@ -9,9 +9,9 @@ define([
     "jquery"
 ], function($) {
     "use strict";
-    $.widget('hello.ajax', {
+    $.widget('shippingrates.ajax', {
         options: {
-            url: 'http://lofextension.localhost/shippingrates/shippingrates/shipping',
+            url: 'http://shippingcc.localhost/shippingrates/shippingrates/shipping',
             method: 'post',
             triggerEvent: 'click'
         },
@@ -47,5 +47,5 @@ define([
 
     });
 
-    return $.hello.ajax;
+    return $.shippingrates.ajax;
 });

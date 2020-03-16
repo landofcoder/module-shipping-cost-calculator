@@ -14,10 +14,4 @@ use Magento\Widget\Block\BlockInterface;
 class ShippingCalculator extends Template implements BlockInterface
 {
     protected $_template="widget/shippingcalculator.phtml";
-
-    public function defaultAddress()
-    {
-        echo getData('title_shipping');
-        die();
-    }
 }
