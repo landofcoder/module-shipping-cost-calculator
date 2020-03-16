@@ -34,17 +34,8 @@ class Shipping extends Action
      * @return \Magento\Framework\View\Result\Page
      */
 
-
-
-
-
-
     public function execute()
     {
-
-
-
-
         $moduleName = $this->request->getModuleName();
         $controller = $this->request->getControllerName();
         $action     = $this->request->getActionName();
