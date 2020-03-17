@@ -44,9 +44,6 @@ define([
                     console.log('success');
                     console.log(res.city);
                     $('#region-state').val(res.city);
-                    var callback = function (){
-
-                    };
                     $("body").trigger('processStop',callback);
                 }
             });

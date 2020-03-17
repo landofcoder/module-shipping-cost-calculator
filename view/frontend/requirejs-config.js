@@ -9,7 +9,8 @@ var config = {
     map: {
         '*': {
             shippingrates:'Lof_ShippingCalculator/js/shippingrates',
-            'Magento_Checkout/js/model/shipping-service' : 'Lof_ShippingCalculator/js/model/shipping-service'
+            estimaterates:'Lof_ShippingCalculator/js/estimaterates',
+
         }
     }
 };

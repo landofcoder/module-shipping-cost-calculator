@@ -9,6 +9,6 @@
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <css src="Lof_ShippingCalculator::css/shippingcalculator.css"/>
+        <css src="Lof_ShippingCalculator::css/styles.css"/>
     </head>
 </page>

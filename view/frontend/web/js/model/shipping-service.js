@@ -28,6 +28,7 @@ define([
             if (loggedinCustomer == 1 ){
                 var address = quote.getShippingRates();
                 var zipcode = (address.postcode);
+                console.log(zipcode);
             }
         },
 
