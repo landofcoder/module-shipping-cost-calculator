@@ -8,116 +8,112 @@
 namespace Lof\ShippingCalculator\Controller\ShippingRates;
 
 use Magento\Framework\App\Action\Action;
-use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\App\Action\Context;
-use Magento\Checkout\Model\Cart;
-use Magento\Checkout\Model\Session;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Lof\ShippingCalculator\Helper\Data as ShippingData;
+use Magento\Framework\Pricing\Helper\Data;
+use Magento\Quote\Model\QuoteFactory;
 
 class Shipping extends Action
 {
-    protected $_cart;
-    protected $_checkoutSession;
-    /**
-     * @var PageFactory
-     */
-    protected $pageFactory;
-
-    protected $scopeConfig;
-
-    protected $shipconfig;
+    protected $product_Repository;
+    protected $quote;
+    protected $pricingHelper;
+    protected $helperData;
 
     /**
      * @param Context $context
-     * @param PageFactory $pageFactory
+     * @param QuoteFactory $quote
+     * @param ProductRepositoryInterface $product_Repository
+     * @param Data $pricingHelper
+     * @param ShippingData $helperData
      */
     public function __construct(
         Context $context,
-        PageFactory $pageFactory,
-        cart $cart,
-        session $checkoutSession,
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\Shipping\Model\Config $shipconfig
+        QuoteFactory $quote,
+        ProductRepositoryInterface $product_Repository,
+        Data $pricingHelper,
+        ShippingData $helperData
     ) {
-        $this->pageFactory = $pageFactory;
-        $this->_cart = $cart;
-        $this->_checkoutSession = $checkoutSession;
-        $this->shipconfig=$shipconfig;
-        $this->scopeConfig = $scopeConfig;
         parent::__construct($context);
+        $this->quote = $quote;
+        $this->product_Repository = $product_Repository;
+        $this->pricingHelper = $pricingHelper;
+        $this->helperData = $helperData;
     }
 
     /**
      * Index Action
      *
      * @return \Magento\Framework\View\Result\Page
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    public function getCart()
-    {
-        return $this->_cart;
-    }
-    public function getCheckoutSession()
-    {
-        return $this->_checkoutSession;
-    }
 
     public function execute()
     {
-        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
-        $shippingAddress = $cart->getQuote()->getShippingAddress();
-
-        $quote = $this->_checkoutSession->getQuote();
-        $address = $quote->getShippingAddress();
-        $collectRates = $address->collectShippingRates();
-
-        $methods = [];
-        $activeCarriers = $this->shipconfig->getActiveCarriers();
-        $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
-        foreach ($activeCarriers as $carrierCode => $carrierModel) {
-            $options = array();
-            if ($carrierMethods = $carrierModel->getAllowedMethods()) {
-                foreach ($carrierMethods as $methodCode => $method) {
-                    $code= $carrierCode.'_'.$methodCode;
-                    $options[]=array('value'=>$code,'label'=>$method);
-                }
-                $carrierTitle =$this->scopeConfig->getValue('carriers/'.$carrierCode.'/title');
+        $_params = $this->getRequest()->getParams();
+        $storeId = isset($_params['storeId'])?$_params['storeId']:0;
+        $response = [];
+        if ($this->helperData->getGeneralConfig($storeId)) {
+            if (
+                empty($_params) || !isset($_params['cep']) || $_params['cep'] == "") {
+                $response['error']['message'] = __('Postcode not informed');
+            } elseif (
+                !isset($_params['product']) ||
+                $_params['product'] == ""||
+                $_params['product'] == 0 ||
+                !is_numeric($_params['product'])
+            ) {
+                $response['error']['message'] = __('Amount reported is invalid');
             }
-            $methods[]=array('value'=>$options,'label'=>$carrierTitle);
+
+            if (!isset($response['error'])) {
+                if (
+                    !isset($_params['qty']) ||
+                    $_params['qty'] == ""||
+                    $_params['qty'] == 0 ||
+                    !is_numeric($_params['qty'])
+                ) {
+                    $qty = 1;
+                } else {
+                    $qty = $_params['qty'];
+                }
+
+                try {
+                    $_product = $this->product_repository->getById($_params['product']);
+                    $default_country_id = $this->helperData->getDefaultCountryCode($storeId);
+                    $quote = $this->quote->create();
+                    $quote->addProduct($_product, $qty);
+                    $quote->getShippingAddress()->setCountryId($default_country_id);
+                    $quote->getShippingAddress()->setPostcode($_params['cep']);
+                    $quote->getShippingAddress()->setCollectShippingRates(true);
+                    $quote->getShippingAddress()->collectShippingRates();
+                    $rates = $quote->getShippingAddress()->getShippingRatesCollection();
+
+                    if (count($rates)>0) {
+                        $shipping_methods = [];
+
+                        foreach ($rates as $rate) {
+                            $_message = !$rate->getErrorMessage() ? "" : $rate->getErrorMessage();
+                            $shipping_methods[$rate->getCarrierTitle()][] = array(
+                                'title' => $rate->getMethodTitle(),
+                                'price' => $this->pricingHelper->currency($rate->getPrice()),
+                                'message' => $_message,
+                            );
+                        }
+
+                        $response = $shipping_methods;
+                    } else {
+                        $response['error']['message'] = __('There is no shipping method available at this time.');
+                    }
+                } catch (\Exception $e) {
+                    $response['error']['message'] = $e->getMessage();
+                    echo json_encode($response, true);
+                    exit;
+                }
+            }
         }
-
-        var_dump($methods);
-        die;
-
-        $quote = $this->checkoutSession->getQuote();
-        $address = $quote->getShippingAddress();
-        $address->collectShippingRates();
-
-        echo '<pre>';
-        print_r($shippingAddress->getData());
-        echo '</pre>';
-        die();
-
-
-
-        $shippingAddress = $this->cart->getQuote()->getShippingAddress();
-
-        $street = $shippingAddress->getData('street');
-        $city = $shippingAddress->getData('city');
-        $countryCode = $shippingAddress->getData('country_id');
-        $postCode = $shippingAddress->getData('postcode');
-        $region = $shippingAddress->getData('region');
-        $telephone = $shippingAddress->getData('telephone');
-        $email = $shippingAddress->getData('email');
-
-        echo $email;
-        die();
-
-
-        // you can also get Shipping Method from shipping address
-        $shippingMethod = $shippingAddress->getShippingMethod();
-
-        $resultJson = $this->resultFactory->create(\Magento\Framework\Controller\ResultFactory::TYPE_JSON);
-        $resultJson->setData($shippingAddress);
-        return  $resultJson;
+        echo json_encode($response, true);
+        exit;
     }
 }
