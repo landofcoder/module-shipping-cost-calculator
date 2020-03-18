@@ -22,16 +22,28 @@ class Shipping extends Action
      */
     protected $pageFactory;
 
+    protected $scopeConfig;
+
+    protected $shipconfig;
+
     /**
      * @param Context $context
      * @param PageFactory $pageFactory
      */
-    public function __construct(Context $context, PageFactory $pageFactory, cart $cart, session $checkoutSession, array $data = [])
-    {
+    public function __construct(
+        Context $context,
+        PageFactory $pageFactory,
+        cart $cart,
+        session $checkoutSession,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+        \Magento\Shipping\Model\Config $shipconfig
+    ) {
         $this->pageFactory = $pageFactory;
         $this->_cart = $cart;
         $this->_checkoutSession = $checkoutSession;
-        parent::__construct($context, $data);
+        $this->shipconfig=$shipconfig;
+        $this->scopeConfig = $scopeConfig;
+        parent::__construct($context);
     }
 
     /**
@@ -54,6 +66,32 @@ class Shipping extends Action
         $cart = $objectManager->get('\Magento\Checkout\Model\Cart');
         $shippingAddress = $cart->getQuote()->getShippingAddress();
 
+        $quote = $this->_checkoutSession->getQuote();
+        $address = $quote->getShippingAddress();
+        $collectRates = $address->collectShippingRates();
+
+        $methods = [];
+        $activeCarriers = $this->shipconfig->getActiveCarriers();
+        $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+        foreach ($activeCarriers as $carrierCode => $carrierModel) {
+            $options = array();
+            if ($carrierMethods = $carrierModel->getAllowedMethods()) {
+                foreach ($carrierMethods as $methodCode => $method) {
+                    $code= $carrierCode.'_'.$methodCode;
+                    $options[]=array('value'=>$code,'label'=>$method);
+                }
+                $carrierTitle =$this->scopeConfig->getValue('carriers/'.$carrierCode.'/title');
+            }
+            $methods[]=array('value'=>$options,'label'=>$carrierTitle);
+        }
+
+        var_dump($methods);
+        die;
+
+        $quote = $this->checkoutSession->getQuote();
+        $address = $quote->getShippingAddress();
+        $address->collectShippingRates();
+
         echo '<pre>';
         print_r($shippingAddress->getData());
         echo '</pre>';
@@ -71,7 +109,8 @@ class Shipping extends Action
         $telephone = $shippingAddress->getData('telephone');
         $email = $shippingAddress->getData('email');
 
-        echo $email; die();
+        echo $email;
+        die();
 
 
         // you can also get Shipping Method from shipping address
