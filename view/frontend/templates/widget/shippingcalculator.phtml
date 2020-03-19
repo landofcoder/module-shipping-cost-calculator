@@ -5,66 +5,78 @@
  * @copyright Copyright © 2020 Landofcoder. All rights reserved.
  * @author    landofcoder@gmail.com
  */
-
-
-$helper = $this->helper('Lof\ShippingCalculator\Helper\Data');
-
-if ($helper->getGeneralConfig('enable') == 1) {
-    ?>
-    <div class="product-add-form">
-            <div id="block-shipping">
-                <div id="shipping-cost-calculator" class="shipping-p-20">
-                    <div class="title-m-10">
-                        <strong><?php echo $block->getData('title_shipping'); ?></strong>
+?>
+<?php $_product = $this->getProductInfo() ?>
+<div class="product-add-form">
+    <div id="block-shipping">
+        <div id="shipping-cost-calculator" class="shipping-p-20">
+            <div class="title-m-10">
+                <strong><?php echo $block->getData('title_shipping'); ?></strong>
+            </div>
+            <div class="description-b-b">
+                <p><?php echo $block->getData('description_shipping'); ?></p>
+            </div>
+            <div class="block-content">
+                <?php
+                if ($block->getData('country_enable') == 1) {
+                    ?>
+                    <label class="country m-t-b-10" for="country-label">
+                        <span><b>Country</b></span>
+                    </label>
+                    <?php $countryBlock = $block->getLayout()->createBlock('Magento\Directory\Block\Data'); ?>
+                    <?= $countryBlock->getCountryHtmlSelect($defValue = $block->getData('default_country'), $name = 'country_id', $id = 'country', $title = 'Country'); ?>
+                    <?php
+                } ?>
+                <?php
+                if ($block->getData('state_region_enable') == 1) {
+                    ?>
+                    <label class="region-state m-t-b-10" for="country-label">
+                        <span><b>Region/State</b></span>
+                    </label>
+                    <div class="control">
+                        <input type="text" name="region_id" id="region-state"
+                               class="input-text validate-zip-international required-entry"
+                               value="<?php echo $block->getData('default_state_region'); ?>" aria-required="true">
                     </div>
-                    <div class="description-b-b">
-                        <p><?php echo $block->getData('description_shipping'); ?></p>
+                    <?php
+                } ?>
+                <?php if ($block->getData('zipcode_enable') == 1) { ?>
+
+                    <label class="postal-code m-t-b-10" for="country-label">
+                        <span><b>Postal Code</b></span>
+                    </label>
+                    <div class="control">
+                        <input type="text"  minlength="8" maxlength="8" oninput="this.value=this.value.replace(/[^0-9]/g,'');" value="<?php echo $block->getData('default_zip_postcode'); ?>"
+                               name="postcode" id="lof-postcode"
+                               class="input-text validate-zip-international required-entry" aria-required="true">
                     </div>
-                        <div class="block-content">
-                            <?php
-                            if ($block->getData('country_enable') == 1) {
-                                ?>
-                            <label class="country m-t-b-10" for="country-label">
-                                <span><b>Country</b></span>
-                            </label>
-                                <?php $countryBlock = $block->getLayout()->createBlock('Magento\Directory\Block\Data'); ?>
-                                <?= $countryBlock->getCountryHtmlSelect($defValue = $block->getData('default_country'), $name = 'country_id', $id = 'country', $title = 'Country'); ?>
-                            <?php
-                            } ?>
-                            <?php
-                                if ($block->getData('state_region_enable') == 1) {
-                                    ?>
-                                    <label class="region-state m-t-b-10" for="country-label">
-                                        <span><b>Region/State</b></span>
-                                    </label>
-                                    <div class="control">
-                                        <input type="text" name="region_id" id="region-state" class="input-text validate-zip-international required-entry" value="<?php echo $block->getData('default_state_region'); ?>" aria-required="true">
-                                    </div>
-                                    <?php
-                                } ?>
-                            <?php if ($block->getData('zipcode_enable') == 1) {?>
+                <?php } ?>
 
-                            <label class="postal-code m-t-b-10" for="country-label">
-                            <span><b>Postal Code</b></span>
-                                </label>
-                                <div class="control">
-                                    <input type="text" value="<?php echo $block->getData('default_zip_postcode'); ?>" name="postcode" id="postal-code" class="input-text validate-zip-international required-entry" aria-required="true">
-                                </div>
-                            <?php } ?>
-
-                            <div class="shipping-button">
-                                    <button id="shipping-estimate-button" class="action btn-danger submit shipping-calculate-button">
-                                        <span><?php echo $block->getData('button_title'); ?></span>
-                                    </button>
-                                </div>
-                        </div>
+                <div class="shipping-button">
+                    <button id="btn-estimate-shipping" class="action btn-danger submit shipping-calculate-button">
+                        <span><?php echo $block->getData('button_title'); ?></span>
+                    </button>
                 </div>
             </div>
+        </div>
     </div>
-    <?php
-}
-?>
+    <input type="hidden" name="lof_product_id" id="lof_product_id" value="<?= $_product->getId() ?>">
+</div>
 
+<ul id="shipping-estimate-results" class="shipping-estimate-results"></ul>
+
+<script>
+    require ([
+            'jquery'
+        ],
+        function ($) {
+            $(window).on("load", function () {
+                require([
+                    'Lof_ShippingCalculator/js/estimaterates'
+                ]);
+            });
+        });
+</script>
 
 
 

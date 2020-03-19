@@ -27,41 +27,45 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\App\Helper\AbstractHelper;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Data extends AbstractHelper
 {
-
+    protected $_storeManager;
     /**
-     * @param \Magento\Framework\App\Helper\Context $context
+     * @param Context
+     * @param StoreManagerInterface
      */
-    
-    protected $scopeConfig;
-    public $_storeManager;
-    const XML_PATH_SHIPPING = 'lofshippingcalculator/';
     public function __construct(
         Context $context,
-        ScopeConfigInterface $scopeConfig,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager
     ) {
         parent::__construct($context);
-        $this->scopeConfig=$scopeConfig;
-        $this->_storeManager=$storeManager;
+        $this->_storeManager = $storeManager;
     }
 
-    /**
-     * @return bool
-     */
-    public function getConfigValue($field, $storeId = null)
+    public function getConfig($key, $store = null)
     {
-        return $this->scopeConfig->getValue(
-            $field,
+        $store = $this->_storeManager->getStore($store);
+
+        $result = $this->scopeConfig->getValue(
+            $key,
             ScopeInterface::SCOPE_STORE,
-            $storeId
+            $store
         );
+        return $result;
+    }
+    /*
+     * Return module status
+     */
+
+    public function getEnable($storeId = null)
+    {
+        return $this->getConfig('lofshippingcalculator/general/enable', $storeId);
     }
 
-    public function getGeneralConfig($code, $storeId = null)
+    public function getDefaultCountryCode($storeId = null)
     {
-        return $this->getConfigValue(self::XML_PATH_SHIPPING .'general/'. $code, $storeId);
+        return $this->getConfig('general/country/default', $storeId);
     }
 }

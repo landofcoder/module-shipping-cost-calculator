@@ -8,9 +8,7 @@
 var config = {
     map: {
         '*': {
-            shippingrates:'Lof_ShippingCalculator/js/shippingrates',
             estimaterates:'Lof_ShippingCalculator/js/estimaterates',
-
         }
     }
 };
