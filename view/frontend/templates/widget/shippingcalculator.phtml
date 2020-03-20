@@ -6,12 +6,13 @@
  * @author    landofcoder@gmail.com
  */
 ?>
+
 <?php $_product = $this->getProductInfo() ?>
 <div class="product-add-form">
     <div id="block-shipping">
         <div id="shipping-cost-calculator" class="shipping-p-20">
             <div class="title-m-10">
-                <strong><?php echo $block->getData('title_shipping'); ?></strong>
+                <h3><?php echo $block->getData('title_shipping'); ?></h3>
             </div>
             <div class="description-b-b">
                 <p><?php echo $block->getData('description_shipping'); ?></p>
@@ -23,8 +24,10 @@
                     <label class="country m-t-b-10" for="country-label">
                         <span><b>Country</b></span>
                     </label>
-                    <?php $countryBlock = $block->getLayout()->createBlock('Magento\Directory\Block\Data'); ?>
-                    <?= $countryBlock->getCountryHtmlSelect($defValue = $block->getData('default_country'), $name = 'country_id', $id = 'country', $title = 'Country'); ?>
+                    <div class="control">
+                        <?php $countryBlock = $block->getLayout()->createBlock('Magento\Directory\Block\Data'); ?>
+                        <?= $countryBlock->getCountryHtmlSelect($defValue = $block->getData('default_country'), $name = 'country', $id = 'country', $title = 'Country'); ?>
+                    </div>
                     <?php
                 } ?>
                 <?php
@@ -34,9 +37,11 @@
                         <span><b>Region/State</b></span>
                     </label>
                     <div class="control">
-                        <input type="text" name="region_id" id="region-state"
-                               class="input-text validate-zip-international required-entry"
-                               value="<?php echo $block->getData('default_state_region'); ?>" aria-required="true">
+                        <?php $regionBlock = $block->getLayout()->createBlock('Magento\Directory\Block\Data'); ?>
+                        <?= $regionBlock->getRegionHtmlSelect($defValue = $block->getData('default_state_region'), $name = 'state', $id = 'state', $title = 'state'); ?>
+<!--                        <input type="text" name="region-state" id="region-state"-->
+<!--                               class="input-text validate-zip-international required-entry"-->
+<!--                               value="--><?php //echo $block->getData('default_state_region'); ?><!--" aria-required="true">-->
                     </div>
                     <?php
                 } ?>
@@ -47,11 +52,10 @@
                     </label>
                     <div class="control">
                         <input type="text"  minlength="8" maxlength="8" oninput="this.value=this.value.replace(/[^0-9]/g,'');" value="<?php echo $block->getData('default_zip_postcode'); ?>"
-                               name="postcode" id="lof-postcode"
+                               name="postcode" id="postcode"
                                class="input-text validate-zip-international required-entry" aria-required="true">
                     </div>
                 <?php } ?>
-
                 <div class="shipping-button">
                     <button id="btn-estimate-shipping" class="action btn-danger submit shipping-calculate-button">
                         <span><?php echo $block->getData('button_title'); ?></span>
@@ -59,11 +63,11 @@
                 </div>
             </div>
         </div>
+        <ul id="shipping-estimate-results" class="shipping-estimate-results"></ul>
     </div>
     <input type="hidden" name="lof_product_id" id="lof_product_id" value="<?= $_product->getId() ?>">
 </div>
 
-<ul id="shipping-estimate-results" class="shipping-estimate-results"></ul>
 
 <script>
     require ([
@@ -72,7 +76,7 @@
         function ($) {
             $(window).on("load", function () {
                 require([
-                    'Lof_ShippingCalculator/js/estimaterates'
+                    'estimaterates'
                 ]);
             });
         });

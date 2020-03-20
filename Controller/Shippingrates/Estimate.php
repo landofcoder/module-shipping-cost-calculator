@@ -17,9 +17,7 @@ use Magento\Framework\Pricing\Helper\Data;
 
 class Estimate extends Action
 {
-    /**
-     * @var PageFactory
-     */
+
     protected $product_repository;
     protected $quote;
     protected $pricingHelper;
@@ -28,14 +26,18 @@ class Estimate extends Action
     /**
      * @param Context $context
      */
-    public function __construct(Context $context, ProductRepositoryInterface $product_repository, QuoteFactory $quote, Data $pricingHelper, LofData $helperData)
-    {
+    public function __construct(
+        Context $context,
+        ProductRepositoryInterface $product_repository,
+        QuoteFactory $quote,
+        Data $pricingHelper,
+        LofData $helperData
+    ) {
         $this->quote = $quote;
         $this->helperData = $helperData;
         $this->pricingHelper = $pricingHelper;
         $this->product_repository = $product_repository;
         parent::__construct($context);
-
     }
 
     /**
@@ -50,8 +52,8 @@ class Estimate extends Action
         $response = [];
         if ($this->helperData->getEnable($storeId)) {
             if (
-                empty($_params) || !isset($_params['cep']) || $_params['cep'] == "") {
-                $response['error']['message'] = __('Postcode not informed');
+                empty($_params) || !isset($_params['country']) || $_params['country'] == "") {
+                $response['error']['message'] = __('Country not informed');
             } elseif (
                 !isset($_params['product']) ||
                 $_params['product'] == ""||
@@ -75,11 +77,11 @@ class Estimate extends Action
 
                 try {
                     $_product = $this->product_repository->getById($_params['product']);
-                    $default_country_id = $this->helperData->getDefaultCountryCode($storeId);
                     $quote = $this->quote->create();
                     $quote->addProduct($_product, $qty);
-                    $quote->getShippingAddress()->setCountryId($default_country_id);
-                    $quote->getShippingAddress()->setPostcode($_params['cep']);
+                    $quote->getShippingAddress()->setCountryId($_params['country']);
+                    $quote->getShippingAddress()->setRegion($_params['state']);
+                    $quote->getShippingAddress()->setPostcode($_params['postcode']);
                     $quote->getShippingAddress()->setCollectShippingRates(true);
                     $quote->getShippingAddress()->collectShippingRates();
                     $rates = $quote->getShippingAddress()->getShippingRatesCollection();

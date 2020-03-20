@@ -5,28 +5,36 @@
  * @author    landofcoder@gmail.com
  */
 
-define(["jquery"], function (e) {
+define(["jquery"], function ($) {
     "use strict";
-    let s = e("#btn-estimate-shipping"), i = e("#lof_product_id").val();
-    s.on("click", function () {
-        let s = e(".lof-shipping-estimate").find("#shipping-estimate-results"), t = e("#lof-postcode"), n = t.val();
-        s.slideUp(), void 0 !== n && "" != n ? (t.removeClass("has-error"), e.ajax({
+    let b = $("#btn-estimate-shipping"), i = $("#lof_product_id").val();
+    b.on("click", function () {
+        let s = $(".lof-shipping-estimate").find("#shipping-estimate-results");
+        let t = $("#postcode");
+        let n = t.val();
+        let q = $("#qty").val();
+        let c = $("#country").val();
+        let rs = $("#state").val();
+        $("#shipping-estimate-results").slideUp(), void 0 !== n && "" != n ? (t.removeClass("has-error"), $.ajax({
             type: "post",
             url: BASE_URL + "shippingcalculator/Shippingrates/estimate/",
-            data: "cep=" + n + "&product=" + i + "&qty=1",
+            data: "country=" + c +"&state=" + rs + "&postcode=" + n + "&product=" + i + "&qty= "+ q ,
             showLoader: !0,
             success: function (i) {
+                $("#shipping-estimate-results").html("");
                 let t = JSON.parse(i);
-                t.error ? s.html("<li>" + t.error.message + "</li>").slideDown() : e.map(t, function (i, t) {
-                    let n = e('<li><span class="title">' + t + "</span></li>");
+                t.error ? s.html("<li>" + t.error.message + "</li>").slideDown() : $.map(t, function (i, t) {
+                    let n = $('<li><span class="title">' + t + "</span></li>");
                     if (i.length > 0) {
-                        var a = e("<ul></ul>");
-                        e.map(i, function (s) {
-                            let i = e('<li><span class="title">' + s.title + "</span>" + s.price + "</li>");
+                        var a = $("<ul></ul>");
+
+                        $.map(i, function (s) {
+                            let i = $('<li><span class="title">' + s.title + "</span>" + s.price + "</li>");
                             "" != s.message && i.append("- " + s.message), a.append(i)
                         })
                     }
-                    n.append(a), s.html(n).slideDown()
+                    n.append(a), $("#shipping-estimate-results").slideDown();
+                    $("#shipping-estimate-results").append(n)
                 })
             }
         })) : t.focus().addClass("has-error")
