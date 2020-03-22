@@ -24,12 +24,12 @@ define(["jquery"], function ($) {
                 $("#shipping-estimate-results").html("");
                 let t = JSON.parse(i);
                 t.error ? s.html("<li>" + t.error.message + "</li>").slideDown() : $.map(t, function (i, t) {
-                    let n = $('<li><span class="title">' + t + "</span></li>");
+                    let n = $('<li style="list-style: none; padding-top: 15px" class="box-shipping-method"><span class="title" style="font-weight: bold;font-size: 15px">' + t + "</span></li>");
                     if (i.length > 0) {
                         var a = $("<ul></ul>");
 
                         $.map(i, function (s) {
-                            let i = $('<li><span class="title">' + s.title + "</span>" + s.price + "</li>");
+                            let i = $('<li style="list-style: none; padding-top:10px"><span class="title" style="font-size: 15px">' + s.title + " - </span>" + s.price + "</li>");
                             "" != s.message && i.append("- " + s.message), a.append(i)
                         })
                     }
