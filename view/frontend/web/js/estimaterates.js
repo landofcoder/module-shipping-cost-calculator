@@ -40,4 +40,3 @@ define(["jquery"], function ($) {
         })) : t.focus().addClass("has-error")
     })
 });
-
