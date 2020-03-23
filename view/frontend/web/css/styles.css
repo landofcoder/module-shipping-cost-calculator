@@ -28,6 +28,8 @@
 }
 #shipping-estimate-results{
     padding-bottom: 10px;
-    border: 2px dashed #1979c3;
+    border: 1px dashed #1979c3;
 }
-
+#region-state-input{
+    visibility: collapse;
+}

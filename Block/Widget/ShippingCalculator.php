@@ -14,6 +14,7 @@ use Lof\ShippingCalculator\Helper\Data;
 use Magento\Catalog\Block\Product\View;
 use Magento\Directory\Block\Data as DirectoryBlock;
 use Lof\ShippingCalculator\Controller\AddressCountry;
+
 class ShippingCalculator extends Template implements BlockInterface
 {
     protected $_template="widget/shippingcalculator.phtml";
@@ -49,6 +50,7 @@ class ShippingCalculator extends Template implements BlockInterface
         $region = $this->directoryBlock->getRegionHtmlSelect();
         return $region;
     }
+
 
 
     /**

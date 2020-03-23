@@ -1,4 +1,5 @@
 <?php
+namespace Lof\ShippingCalculator\Controller\Shippingrates;
 
 use Magento\Directory\Model\RegionFactory;
 use Magento\Framework\App\Action\Action;
@@ -6,15 +7,14 @@ use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\View\Result\PageFactory;
 use Magento\Framework\App\Action\Context;
 
-class AddressCountry extends Action
+class Country extends Action
 {
     /**
      * @var PageFactory
      */
     protected $pageFactory;
-    protected $regionColFactory;
     protected $resultJsonFactory;
-
+    protected $regionColFactory;
     /**
      * @param Context $context
      * @param PageFactory $pageFactory
@@ -22,13 +22,13 @@ class AddressCountry extends Action
     public function __construct(
         Context $context,
         PageFactory $pageFactory,
-        JsonFactory    $resultJsonFactory,
+        JsonFactory $resultJsonFactory,
         RegionFactory $regionColFactory
     ) {
-        parent::__construct($context);
         $this->pageFactory = $pageFactory;
-        $this->resultJsonFactory = $resultJsonFactory;
         $this->regionColFactory = $regionColFactory;
+        $this->resultJsonFactory = $resultJsonFactory;
+        parent::__construct($context);
     }
 
     /**
@@ -41,8 +41,18 @@ class AddressCountry extends Action
         $this->_view->loadLayout();
         $this->_view->getLayout()->initMessages();
         $this->_view->renderLayout();
-        $result= $this->resultJsonFactory->create();
-        $regions=$this->regionColFactory->create()->getCollection()->addFieldToFilter('country_id',$this->getRequest()->getParam('country'));
-        return $result->setData(['success' => true,'value'=>$regions->getData()]);
+
+        $result           = $this->resultJsonFactory->create();
+        $regions=$this->regionColFactory->create()->getCollection()->addFieldToFilter('country_id', $this->getRequest()->getParam('country'));
+
+        $html = '';
+
+        if (count($regions) > 0) {
+            $html.='<option selected="selected" value="">Please select a region, state or province.</option>';
+            foreach ($regions as $state) {
+                $html.= '<option  value="'.$state->getName().'">'.$state->getName().'.</option>';
+            }
+        }
+        return $result->setData(['success' => true,'value'=>$html]);
     }
 }

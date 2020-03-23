@@ -7,6 +7,10 @@
  */
 ?>
 
+<?php
+    $region = $block->getRegion();
+?>
+
 <?php $_product = $this->getProductInfo() ?>
 <div class="product-add-form">
     <div id="block-shipping">
@@ -26,7 +30,7 @@
                     </label>
                     <div class="control">
                         <?php $countryBlock = $block->getLayout()->createBlock('Magento\Directory\Block\Data'); ?>
-                        <?= $countryBlock->getCountryHtmlSelect($defValue = $block->getData('default_country'), $name = 'country', $id = 'country', $title = 'Country'); ?>
+                        <?= $countryBlock->getCountryHtmlSelect($defValue = $block->getData('default_country'), $name = 'country_id', $id = 'country', $title = 'Country'); ?>
                     </div>
                     <?php
                 } ?>
@@ -37,12 +41,10 @@
                         <span><b>Region/State</b></span>
                     </label>
                     <div class="control">
-                        <?php $regionBlock = $block->getLayout()->createBlock('Magento\Directory\Block\Data'); ?>
-                        <?= $regionBlock->getRegionHtmlSelect($defValue = $block->getData('default_state_region'), $name = 'state', $id = 'state', $title = 'state'); ?>
-<!--                        <input type="text" name="region-state" id="region-state"-->
-<!--                               class="input-text validate-zip-international required-entry"-->
-<!--                               value="--><?php //echo $block->getData('default_state_region'); ?><!--" aria-required="true">-->
-                    </div>
+                        <?= $region ?>
+                        <input type="hidden" name="region-state" id="region-state-input"
+                               class="input-text validate-zip-international required-entry"
+                               value="<?php echo $block->getData('default_state_region'); ?>" aria-required="true"></div>
                     <?php
                 } ?>
                 <?php if ($block->getData('zipcode_enable') == 1) { ?>
@@ -81,5 +83,38 @@
         });
 </script>
 
+
+<script>
+
+    require([
+        'jquery'
+    ],function ($) {
+        $(document).on('change','#country',function() {
+            var param = 'country='+$('#country').val();
+            console.log(param);
+            $.ajax({
+                showLoader: true,
+                url: 'shippingcalculator/shippingrates/country',
+                data: param,
+                type: "GET",
+                dataType: 'json'
+            }).done(function (data) {
+                $('#state').empty();
+                if(data.value=='')
+                {
+                    $('#state').hide();
+                    $('#region-state-input').show();
+                }
+                else
+                {
+                    $('#region-state-input').hide();
+                    $('#state').append(data.value);
+                    $('.field.states.required').hide();
+                    $('.field.region.required').show();
+                }
+            });
+        });
+    })
+</script>
 
 

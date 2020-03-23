@@ -11,4 +11,5 @@ use Magento\Framework\View\Element\Template;
 
 class Estimate extends Template
 {
+
 }
