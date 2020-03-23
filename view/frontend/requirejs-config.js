@@ -1,4 +1,4 @@
-/**
+/**model
  * requirejs-config
  *
  * @copyright Copyright © 2020 landofcoder. All rights reserved.
@@ -8,7 +8,7 @@
 var config = {
     map: {
         '*': {
-            hello:'Lof_ShippingCalculator/js/hello',
+            estimaterates:'Lof_ShippingCalculator/js/estimaterates',
         }
     }
 };

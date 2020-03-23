@@ -9,7 +9,7 @@ namespace Lof\ShippingCalculator\Block;
 
 use Magento\Framework\View\Element\Template;
 
-class Shipping extends Template
+class Estimate extends Template
 {
 
 }

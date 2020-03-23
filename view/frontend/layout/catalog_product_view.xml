@@ -10,9 +10,10 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <css src="Lof_ShippingCalculator::css/styles.css"/>
-        <script src="Lof_ShippingCalculator::js/hello.js"/>
     </head>
-    <referenceContainer name="product.info.main">
-        <block class="Magento\Catalog\Block\Product\View" name="hello.ajax.info" template="Lof_ShippingCalculator::shippingcalculator.phtml" after="product.info" />
-    </referenceContainer>
+    <body>
+        <referenceContainer name="content">
+            <block class="Lof\ShippingCalculator\Block\Widget\ShippingCalculator" name="shippingcalculator" template="templates/shippingcalculator.phtml"></block>
+        </referenceContainer>
+    </body>
 </page>
