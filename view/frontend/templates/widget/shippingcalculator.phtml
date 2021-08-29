@@ -1,120 +1,134 @@
 <?php
 /**
- * shippingcalculator
- *
- * @copyright Copyright © 2020 Landofcoder. All rights reserved.
- * @author    landofcoder@gmail.com
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
  */
-?>
 
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Customer\Block\Address\Edit $block */
+?>
 <?php
-    $region = $block->getRegion();
+$helper = $this->helper('Lof\ShippingCalculator\Helper\Data');
 ?>
+<?php if ($helper->enableDisplaying()) : ?>
+<?php
+$displayCountry = $helper->getConfig('lofshippingcalculator/appearance/display_country');
+$displayRegion = $helper->getConfig('lofshippingcalculator/appearance/display_region');
+$displayPostCode = $helper->getConfig('lofshippingcalculator/appearance/display_postcode');
+$autoCalculate = (bool)$helper->getConfig('lofshippingcalculator/appearance/auto_calculate');
+$displayFlag = (bool)$helper->getConfig('lofshippingcalculator/appearance/display_flag');
+$widget = [
+    'Lof_ShippingCalculator/js/shipping-calculator' => [
+        'countryId'     => '#country',
+        'priceFormat'   => $helper->getPriceFormat(),
+        'usePriceInclucdingTax' => $helper->usePriceInclucdingTax(),
+        'flagUrl'       => $helper->getMediaUrl('lof/flags/{{code}}.jpg'),
+        'emptyMsg'      => $helper->getConfig('lofshippingcalculator/appearance/message'),
+        'autoCalculate' => $autoCalculate,
+        'addressFormat' => $helper->getConfig('lofshippingcalculator/appearance/address_format'),
+        'displayFlag'   => $displayFlag
+    ]
+];
 
-<?php $_product = $this->getProductInfo() ?>
-<div class="product-add-form">
-    <div id="block-shipping">
-        <div id="shipping-cost-calculator" class="shipping-p-20">
-            <div class="title-m-10">
-                <h3><?php echo $block->getData('title_shipping'); ?></h3>
-            </div>
-            <div class="description-b-b">
-                <p><?php echo $block->getData('description_shipping'); ?></p>
-            </div>
-            <div class="block-content">
-                <?php
-                if ($block->getData('country_enable') == 1) {
-                    ?>
-                    <label class="country m-t-b-10" for="country-label">
-                        <span><b>Country</b></span>
-                    </label>
+$helper->prepareShippingAddress($block);
+$currentCountry = $block->getCountryId();
+$attributeData = $block->getAttributeData();
+?>
+<div class="block-shipping-estimation" data-mage-init='<?= json_encode($widget) ?>'>
+    <div class="form-address-edit" id="shipping-form">
+        <div class="block-title block-heading">
+            <strong><?= $block->escapeHtml($helper->getConfig('lofshippingcalculator/appearance/title')) ?></strong>
+            <?php if ($displayFlag) : ?>
+            <img class="country-flag" data-role="country-flag" src="<?= $helper->getMediaUrl('lof/flags/'.strtolower($currentCountry).'.jpg') ?>">
+            <?php endif ?>
+            <div data-role="current-address" style="display:none" class="current-address"></div>
+            <a href="javascript:void(0)" data-role="content-toggle" class="content-toggle"><?= $helper->getConfig('lofshippingcalculator/general/action_label') ?></a>
+        </div>
+        <div class="block-content" data-role="block-content" style="display:none;">
+            <fieldset class="fieldset">
+                <div class="field country required<?= (!$displayCountry)?' hidden':''; ?>">
+                    <?php if ($displayRegion || $displayPostCode) : ?>
+                    <label class="label" for="country"><span><?=  $attributeData->getFrontendLabel('country_id') ?></span></label>
+                    <?php endif ?>
                     <div class="control">
-                        <?php $countryBlock = $block->getLayout()->createBlock('Magento\Directory\Block\Data'); ?>
-                        <?= $countryBlock->getCountryHtmlSelect($defValue = $block->getData('default_country'), $name = 'country_id', $id = 'country', $title = 'Country'); ?>
+                        <?= $block->getCountryHtmlSelect() ?>
                     </div>
-                    <?php
-                } ?>
-                <?php
-                if ($block->getData('state_region_enable') == 1) {
-                    ?>
-                    <label class="region-state m-t-b-10" for="country-label">
-                        <span><b>Region/State</b></span>
-                    </label>
-                    <div class="control">
-                        <?= $region ?>
-                        <input type="hidden" name="region-state" id="region-state-input"
-                               class="input-text validate-zip-international required-entry"
-                               value="<?php echo $block->getData('default_state_region'); ?>" aria-required="true"></div>
-                    <?php
-                } ?>
-                <?php if ($block->getData('zipcode_enable') == 1) { ?>
-
-                    <label class="postal-code m-t-b-10" for="country-label">
-                        <span><b>Postal Code</b></span>
-                    </label>
-                    <div class="control">
-                        <input type="text"  minlength="8" maxlength="8" oninput="this.value=this.value.replace(/[^0-9]/g,'');" value="<?php echo $block->getData('default_zip_postcode'); ?>"
-                               name="postcode" id="postcode"
-                               class="input-text validate-zip-international required-entry" aria-required="true">
-                    </div>
-                <?php } ?>
-                <div class="shipping-button">
-                    <button id="btn-estimate-shipping" class="action btn-danger submit shipping-calculate-button">
-                        <span><?php echo $block->getData('button_title'); ?></span>
-                    </button>
                 </div>
+                <?php if ($displayRegion) : ?>
+                <div class="field region">
+                    <label class="label" for="region_id">
+                        <span><?=  $attributeData->getFrontendLabel('region') ?></span>
+                    </label>
+                    <div class="control">
+                        <select id="region_id" data-name="region_id" data-update="region_id" title="<?=  $attributeData->getFrontendLabel('region') ?>" class="validate-select" <?=  !$block->getConfig('general/region/display_all') ? ' disabled="disabled"' : '' ?>>
+                            <option value=""><?= $block->escapeHtml(__('Please select a region, state or province.')) ?></option>
+                        </select>
+                        <input type="text"
+                           data-update="region"
+                           id="region"
+                           data-name="region"
+                           value="<?= $block->getRegion() ? $block->escapeHtmlAttr($block->getRegion()->getRegion()) : '' ?>"
+                           title="<?=  $attributeData->getFrontendLabel('region') ?>"
+                           class="input-text validate-not-number-first <?= $block->escapeHtmlAttr($this->helper(\Magento\Customer\Helper\Address::class)->getAttributeValidationClass('region')) ?>"/>
+                    </div>
+                </div>
+                <?php endif ?>
+                <?php if ($displayPostCode) : ?>
+                <div class="field zip">
+                    <label class="label" for="zip">
+                        <span><?=  $attributeData->getFrontendLabel('postcode') ?></span>
+                    </label>
+                    <div class="control">
+                        <input type="text"
+                           data-update="postcode"
+                           data-name="postcode"
+                           value="<?= $block->getPostcode() ?>"
+                           title="<?=  $attributeData->getFrontendLabel('postcode') ?>"
+                           id="zip"
+                           class="input-text validate-zip-international <?= $block->escapeHtmlAttr($this->helper(\Magento\Customer\Helper\Address::class)->getAttributeValidationClass('postcode')) ?>">
+                    </div>
+                </div>
+                <?php endif ?>
+                <?= $block->getChildHtml('extra_fields') ?>
+            </fieldset>
+            <div class="bottom-section">
+                <div class="shipping-cost-result">
+                    <div data-role="rs-container" class="rs-inner" style="display:none;">
+                        <div class="rs-title" data-role="rs-label"><span><?= __('Shipping Cost') ?></span></div>
+                        <div class="content" data-role="result"></div>
+                    </div>
+                    <div data-role="loader" class="loader-container" <?php if (!$autoCalculate) : ?>style="display:none;"<?php endif ?>>
+                        <div class="shipping-loader">
+                            <img src="<?= $block->getViewFileUrl('images/loader-1.gif') ?>" alt="<?= __('Loading...') ?>">
+                        </div>
+                    </div>
+                </div>
+                <?php if (!$autoCalculate) : ?>
+                <div class="actions">
+                    <button data-role="submit" class="action btn-submit" type="button"><span><?= __('Calculate') ?></span></button>
+                </div>
+                <?php endif ?>
             </div>
-            <ul id="shipping-estimate-results" style="display: none" class="shipping-estimate-results"></ul>
         </div>
     </div>
-    <input type="hidden" name="lof_product_id" id="lof_product_id" value="<?= $_product->getId() ?>">
 </div>
-
-<script>
-    require ([
-            'jquery'
-        ],
-        function ($) {
-            $(window).on("load", function () {
-                require([
-                    'estimaterates'
-                ]);
-            });
-        });
+<script type="text/x-magento-init">
+    {
+        <?php if ($displayRegion) : ?>
+         "#country": {
+            "regionUpdater": {
+                "optionalRegionAllowed": true,
+                "regionListId": "#region_id",
+                "regionInputId": "#region",
+                "postcodeId": "#zip",
+                "form": "#shipping-form",
+                "regionJson": <?=  $this->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
+                "defaultRegion": "<?= (int) $block->getRegionId() ?>",
+                "countriesWithOptionalZip": <?=  $this->helper(\Magento\Directory\Helper\Data::class)->getCountriesWithOptionalZip(true) ?>
+            }
+        }
+        <?php endif ?>
+    }
 </script>
-
-
-<script>
-
-    require([
-        'jquery'
-    ],function ($) {
-        $(document).on('change','#country',function() {
-            var param = 'country='+$('#country').val();
-            console.log(param);
-            $.ajax({
-                showLoader: true,
-                url: 'shippingcalculator/shippingrates/country',
-                data: param,
-                type: "GET",
-                dataType: 'json'
-            }).done(function (data) {
-                $('#state').empty();
-                if(data.value=='')
-                {
-                    $('#state').hide();
-                    $('#region-state-input').show();
-                }
-                else
-                {
-                    $('#region-state-input').hide();
-                    $('#state').append(data.value);
-                    $('.field.states.required').hide();
-                    $('.field.region.required').show();
-                }
-            });
-        });
-    })
-</script>
-
-
+<?php endif ?>
