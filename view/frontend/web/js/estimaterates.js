@@ -211,6 +211,7 @@ define([
                         JSON.stringify({"request": postData }), 
                         false
                     ).done(function (response) {
+                        self.$loader.hide();
                         if (typeof response != 'object') {
                             return false;
                         }
