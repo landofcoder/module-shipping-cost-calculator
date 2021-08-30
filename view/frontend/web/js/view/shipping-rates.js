@@ -45,6 +45,7 @@ define(
             return resultTemplate({
                 carriers: config.carriers?config.carriers:[],
                 utils: utils,
+                enableCheapest: config.enableCheapest?config.enableCheapest:false,
                 priceFormat: config.priceFormat?config.priceFormat:priceTemplate,
                 usePriceInclucdingTax: config.usePriceInclucdingTax?config.usePriceInclucdingTax:false
             })

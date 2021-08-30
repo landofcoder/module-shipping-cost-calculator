@@ -19,6 +19,7 @@ interface ShippingRateInterface extends \Magento\Framework\Api\ExtensibleDataInt
     const ERROR_MESSAGE = 'error_message';
     const PRICE_EXCL_TAX = 'price_excl_tax';
     const PRICE_INCL_TAX = 'price_incl_tax';
+    const IS_CHEAPEST = 'is_cheapest';
 
     /**
      * Get carrier_code
@@ -149,6 +150,19 @@ interface ShippingRateInterface extends \Magento\Framework\Api\ExtensibleDataInt
      * @return \Lof\ShippingCalculator\Api\Data\ShippingRateInterface
      */
     public function setPriceInclTax($price_incl_tax);
+
+    /**
+     * Get is_cheapest
+     * @return bool|int|null
+     */
+    public function getIsCheapest();
+
+    /**
+     * Set is_cheapest
+     * @param bool|int $is_cheapest
+     * @return \Lof\ShippingCalculator\Api\Data\ShippingRateInterface
+     */
+    public function setIsCheapest($is_cheapest);
 
     /**
      * Retrieve existing extension attributes object or create a new one.

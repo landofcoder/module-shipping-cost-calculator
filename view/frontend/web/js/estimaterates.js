@@ -36,6 +36,7 @@ define([
                 usePriceInclucdingTax: false,
                 emptyMsg: 'There are no shipping methods available for this region.',
                 autoCalculate: false,
+                enableCheapest: false,
                 storeCode: 'default'
             },
             _create: function() {
@@ -219,6 +220,7 @@ define([
                             self.$result.html(ShippingRateRender({
                                 carriers: response,
                                 //utils: utils,
+                                enableCheapest: conf.enableCheapest,
                                 priceFormat: conf.priceFormat,
                                 usePriceInclucdingTax: conf.usePriceInclucdingTax
                             }));

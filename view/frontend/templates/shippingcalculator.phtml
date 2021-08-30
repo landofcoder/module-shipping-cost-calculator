@@ -18,6 +18,7 @@ $displayRegion = $helper->getConfig('appearance/display_region');
 $displayPostCode = $helper->getConfig('appearance/display_postcode');
 $autoCalculate = (bool)$helper->getConfig('appearance/auto_calculate');
 $displayFlag = (bool)$helper->getConfig('appearance/display_flag');
+$default_shipping_address_enable = (bool)$helper->getConfig('appearance/default_shipping_address_enable');
 $widget = [
     'Lof_ShippingCalculator/js/estimaterates' => [
         'countryId'     => '#country',
@@ -27,6 +28,7 @@ $widget = [
         'emptyMsg'      => $helper->getConfig('appearance/message'),
         'autoCalculate' => $autoCalculate,
         'addressFormat' => $helper->getConfig('appearance/address_format'),
+        'enableCheapest' => $helper->getConfig('appearance/cheapest_method_enable'),
         'displayFlag'   => $displayFlag,
         'storeCode'     => $helper->getStoreCode()
     ]
@@ -69,7 +71,7 @@ $attributeData = $block->getAttributeData();
                            data-update="region"
                            id="region"
                            data-name="region"
-                           value="<?= $block->getRegion() ? $block->escapeHtmlAttr($block->getRegion()->getRegion()) : '' ?>"
+                           value="<?= $block->getRegion() && $default_shipping_address_enable ? $block->escapeHtmlAttr($block->getRegion()->getRegion()) : '' ?>"
                            title="<?=  $attributeData->getFrontendLabel('region') ?>"
                            class="input-text validate-not-number-first <?= $block->escapeHtmlAttr($this->helper(\Magento\Customer\Helper\Address::class)->getAttributeValidationClass('region')) ?>"/>
                     </div>
@@ -84,7 +86,7 @@ $attributeData = $block->getAttributeData();
                         <input type="text"
                            data-update="postcode"
                            data-name="postcode"
-                           value="<?= $block->getPostcode() ?>"
+                           value="<?= $default_shipping_address_enable?$block->getPostcode():""; ?>"
                            title="<?=  $attributeData->getFrontendLabel('postcode') ?>"
                            id="zip"
                            class="input-text validate-zip-international <?= $block->escapeHtmlAttr($this->helper(\Magento\Customer\Helper\Address::class)->getAttributeValidationClass('postcode')) ?>">
@@ -125,7 +127,7 @@ $attributeData = $block->getAttributeData();
                 "postcodeId": "#zip",
                 "form": "#shipping-form",
                 "regionJson": <?=  $this->helper(\Magento\Directory\Helper\Data::class)->getRegionJson() ?>,
-                "defaultRegion": "<?= (int) $block->getRegionId() ?>",
+                "defaultRegion": "<?= $default_shipping_address_enable?(int) $block->getRegionId():0; ?>",
                 "countriesWithOptionalZip": <?=  $this->helper(\Magento\Directory\Helper\Data::class)->getCountriesWithOptionalZip(true) ?>
             }
         }

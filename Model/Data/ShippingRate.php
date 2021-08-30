@@ -188,6 +188,22 @@ class ShippingRate extends \Magento\Framework\Api\AbstractExtensibleObject imple
     /**
      * {@inheritdoc}
      */
+    public function getIsCheapest()
+    {
+        return $this->_get(self::IS_CHEAPEST);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIsCheapest($is_cheapest)
+    {
+        return $this->setData(self::IS_CHEAPEST, $is_cheapest);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getExtensionAttributes()
     {
         return $this->_getExtensionAttributes();
