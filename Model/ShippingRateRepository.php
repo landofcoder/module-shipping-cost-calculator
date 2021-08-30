@@ -179,7 +179,7 @@ class ShippingRateRepository implements ShippingRateRepositoryInterface
                     'error_message' => (string)$carrier->getErrorMessage(),
                     'price_excl_tax'=> $carrier->getPriceExclTax(),
                     'price_incl_tax'=> $carrier->getPriceInclTax(),
-                    'is_cheapest' => isset($is_cheapest[$carrier->getCarrierCode()])?(int)$is_cheapest[$carrier->getCarrierCode()]:0
+                    'is_cheapest' => isset($is_cheapest[$carrier->getCarrierCode()])?1:0
                 ]);
             }
         }
