@@ -17,7 +17,7 @@ define(
             html +=     '<% _.each(carriers, function(carrier) { %>';
             html +=     '<div class="shipping-item <%- carrier.carrier_code %>">';
             html +=     '<div class="shipping-title"><%- carrier.carrier_title %></div>';
-            html +=     '<div class="shipping-detail">';
+            html +=     '<div class="shipping-detail <%- enableCheapest && carrier.is_cheapest?"is-cheapest":"" %>">';
             html +=     '<% if (carrier.error_message) { %>';
             html +=     '<div class="shipping-cost error-msg"><%- carrier.error_message %></div>';
             html +=     '<% } else { %>';
