@@ -162,7 +162,7 @@ class ShippingRateRepository implements ShippingRateRepositoryInterface
             foreach ($carriers as $carrier) {
                 $carrierArray[$carrier->getCarrierCode()] = $carrier->getAmount();
             }
-            arsort($carrierArray);
+            asort($carrierArray);
             $is_cheapest = [];
             $first_key = array_keys($carrierArray)[0];
             $is_cheapest[$first_key] = $carrierArray[$first_key];
@@ -179,7 +179,7 @@ class ShippingRateRepository implements ShippingRateRepositoryInterface
                     'error_message' => (string)$carrier->getErrorMessage(),
                     'price_excl_tax'=> $carrier->getPriceExclTax(),
                     'price_incl_tax'=> $carrier->getPriceInclTax(),
-                    'is_cheapest' => isset($is_cheapest['carrier_code'])?(int)$is_cheapest['carrier_code']:0
+                    'is_cheapest' => isset($is_cheapest[$carrier->getCarrierCode()])?(int)$is_cheapest[$carrier->getCarrierCode()]:0
                 ]);
             }
         }
