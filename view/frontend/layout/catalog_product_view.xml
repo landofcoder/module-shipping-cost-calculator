@@ -12,8 +12,22 @@
         <css src="Lof_ShippingCalculator::css/styles.css"/>
     </head>
     <body>
-        <referenceContainer name="content">
-            <block class="Lof\ShippingCalculator\Block\Widget\ShippingCalculator" name="shippingcalculator" template="templates/shippingcalculator.phtml"></block>
+        <referenceBlock name="head.additional">
+            <block class="Magento\Framework\View\Element\Template" name="lofshippingcalculator.initjs" template="Lof_ShippingCalculator::head_js.phtml" />
+        </referenceBlock>
+        <referenceContainer name="product.info.form.content">
+            <block class="Magento\Directory\Block\Data" ifconfig="lofshippingcalculator/general/enable" before="product.info.addtocart" name="lof.shipping.estimation.simple" template="Lof_ShippingCalculator::shippingcalculator.phtml">
+                <arguments>
+                    <argument name="attribute_data" xsi:type="object">Lof\ShippingCalculator\Block\DataProvider\AddressAttributeData</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceContainer name="product.info.options.wrapper">
+            <block class="Magento\Directory\Block\Data" ifconfig="lofshippingcalculator/general/enable" after="product.info.options.configurable" before="-" name="lof.shipping.estimation.configurable" template="Lof_ShippingCalculator::shippingcalculator.phtml">
+                <arguments>
+                    <argument name="attribute_data" xsi:type="object">Lof\ShippingCalculator\Block\DataProvider\AddressAttributeData</argument>
+                </arguments>
+            </block>
         </referenceContainer>
     </body>
 </page>
