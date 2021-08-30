@@ -115,16 +115,13 @@ class ShippingRateRepository implements ShippingRateRepositoryInterface
      */
     public function getRates($request) 
     {
-        $productId = $request->getProductId();
-        $productSku = $request->getProductSku();
+        $productId = $request->getProduct();
 
         if (!$productId) {
             throw new NoSuchEntityException(__('Shipping Rates requires product id in request.'));
         }
 
-        $selectedMethods = $this->helperData->getSelectedShippingMethods();
         $cart = $this->helperData->getCart();
-        $selectedMethods = $selectedMethods ? explode(',', $selectedMethods) : [];
         $qty = $request->getQty();
         $qty = $qty?(float)$qty:1;
         $store = $this->storeManagerInterface->getStore();
@@ -134,9 +131,19 @@ class ShippingRateRepository implements ShippingRateRepositoryInterface
         $product = $this->productRepository->getById($productId, false, $storeId);
         $quote = $cart->getQuote();
 
-        $productParams = $request->getProductOptions();
+        $productParams = $request->getSuperAttribute();//super_attribute
         if ($productParams && !is_array($productParams)) {
-            $productParams = $this->serializer->unserialize($productParams);
+            $attributes = explode(",", $productParams);
+            if ($attributes && count($attributes)) {
+                $newAttributes = [];
+                foreach ($attributes as $key => $val) {
+                    $tmpAttributes = explode(":", $val);
+                    if ($tmpAttributes && count($tmpAttributes) >= 2) {
+                        $newAttributes[(int)$tmpAttributes[0]] = (int)$tmpAttributes[1];
+                    }
+                }
+                $productParams = $newAttributes;
+            }
         }
         $item = $this->itemFactory->create();
         $item->setProduct($product);
@@ -145,15 +152,9 @@ class ShippingRateRepository implements ShippingRateRepositoryInterface
             $item->addOption($productParams);
         }
         $quote->addItem($item);
-
-        $shipping_data = [
-            'country_id' => $request->getCountryId(),
-            'region_id' => $request->getRegionId(),
-            'region' => $request->getRegion(),
-            'postcode' => $request->getPostcode()
-        ];
+        $shipping_data = $request->getShippingData();
         $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->addData($shipping_data);
+        $shippingAddress->addData($shipping_data->__toArray());
         $carriers = $this->shippingMethodManagement->getShippingMethodsByQuote($quote, $shippingAddress);
         $result = [];
         if ($carriers) {

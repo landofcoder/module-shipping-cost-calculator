@@ -11,23 +11,24 @@
 <?php
 $helper = $this->helper('Lof\ShippingCalculator\Helper\Data');
 ?>
-<?php if ($helper->enableDisplaying()) : ?>
+<?php if ($helper->getEnable()) : ?>
 <?php
-$displayCountry = $helper->getConfig('lofshippingcalculator/appearance/display_country');
-$displayRegion = $helper->getConfig('lofshippingcalculator/appearance/display_region');
-$displayPostCode = $helper->getConfig('lofshippingcalculator/appearance/display_postcode');
-$autoCalculate = (bool)$helper->getConfig('lofshippingcalculator/appearance/auto_calculate');
-$displayFlag = (bool)$helper->getConfig('lofshippingcalculator/appearance/display_flag');
+$displayCountry = $helper->getConfig('appearance/display_country');
+$displayRegion = $helper->getConfig('appearance/display_region');
+$displayPostCode = $helper->getConfig('appearance/display_postcode');
+$autoCalculate = (bool)$helper->getConfig('appearance/auto_calculate');
+$displayFlag = (bool)$helper->getConfig('appearance/display_flag');
 $widget = [
     'Lof_ShippingCalculator/js/estimaterates' => [
         'countryId'     => '#country',
         'priceFormat'   => $helper->getPriceFormat(),
         'usePriceInclucdingTax' => $helper->usePriceInclucdingTax(),
         'flagUrl'       => $helper->getMediaUrl('lof/flags/{{code}}.jpg'),
-        'emptyMsg'      => $helper->getConfig('lofshippingcalculator/appearance/message'),
+        'emptyMsg'      => $helper->getConfig('appearance/message'),
         'autoCalculate' => $autoCalculate,
-        'addressFormat' => $helper->getConfig('lofshippingcalculator/appearance/address_format'),
-        'displayFlag'   => $displayFlag
+        'addressFormat' => $helper->getConfig('appearance/address_format'),
+        'displayFlag'   => $displayFlag,
+        'storeCode'     => $helper->getStoreCode()
     ]
 ];
 
@@ -38,12 +39,12 @@ $attributeData = $block->getAttributeData();
 <div class="block-shipping-estimation" data-mage-init='<?= json_encode($widget) ?>'>
     <div class="form-address-edit" id="shipping-form">
         <div class="block-title block-heading">
-            <strong><?= $block->escapeHtml($helper->getConfig('lofshippingcalculator/appearance/title')) ?></strong>
+            <strong><?= $block->escapeHtml($helper->getConfig('appearance/title')) ?></strong>
             <?php if ($displayFlag) : ?>
             <img class="country-flag" data-role="country-flag" src="<?= $helper->getMediaUrl('lof/flags/'.strtolower($currentCountry).'.jpg') ?>">
             <?php endif ?>
             <div data-role="current-address" style="display:none" class="current-address"></div>
-            <a href="javascript:void(0)" data-role="content-toggle" class="content-toggle"><?= $helper->getConfig('lofshippingcalculator/general/action_label') ?></a>
+            <a href="javascript:void(0)" data-role="content-toggle" class="content-toggle"><?= $helper->getConfig('appearance/action_label') ?></a>
         </div>
         <div class="block-content" data-role="block-content" style="display:none;">
             <fieldset class="fieldset">

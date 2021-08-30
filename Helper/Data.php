@@ -136,6 +136,17 @@ class Data extends AbstractHelper
         $this->country = $country;
         $this->cartFactory = $cartFactory;
         $this->sessionFactory = $sessionFactory;
+        $this->addressRepositoryInterface = $addressRepositoryInterface;
+    }
+
+    /**
+     * Get Store Code
+     * @return string
+     */
+    public function getStoreCode() 
+    {
+        $store = $this->_storeManager->getStore();
+        return $store->getCode();
     }
 
     /**

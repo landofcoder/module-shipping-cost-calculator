@@ -28,97 +28,65 @@ class RequestRate extends \Magento\Framework\Api\AbstractExtensibleObject implem
     /**
      * {@inheritdoc}
      */
-    public function getProductId()
+    public function getProduct()
     {
-        return $this->_get(self::PRODUCT_ID);
+        return $this->_get(self::PRODUCT);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setProductId($product_id)
+    public function setProduct($product_id)
     {
-        return $this->setData(self::PRODUCT_ID, $product_id);
+        return $this->setData(self::PRODUCT, $product_id);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getProductSku()
+    public function getRelatedProduct()
     {
-        return $this->_get(self::PRODUCT_SKU);
+        return $this->_get(self::RELATED_PRODUCT);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setProductSku($product_sku)
+    public function setRelatedProduct($related_product)
     {
-        return $this->setData(self::PRODUCT_SKU, $product_sku);
+        return $this->setData(self::RELATED_PRODUCT, $related_product);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCountryId() 
+    public function getSelectedConfigurableOption() 
     {
-        return $this->_get(self::COUNTRY_ID);
+        return $this->_get(self::SELECTED_CONFIGURABLE_OPTION);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setCountryId($country_id)
+    public function setSelectedConfigurableOption($selected_configurable_option)
     {
-        return $this->setData(self::COUNTRY_ID, $country_id);
+        return $this->setData(self::SELECTED_CONFIGURABLE_OPTION, $selected_configurable_option);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getRegionId()
+    public function getSuperAttribute()
     {
-        return $this->_get(self::REGION_ID);
+        return $this->_get(self::SUPER_ATTRIBUTE);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setRegionId($region_id)
+    public function setSuperAttribute($super_attribute)
     {
-        return $this->setData(self::REGION_ID, $region_id);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getRegion()
-    {
-        return $this->_get(self::REGION);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setRegion($region)
-    {
-        return $this->setData(self::REGION, $region);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getPostcode()
-    {
-        return $this->_get(self::POSTCODE);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function setPostcode($postcode)
-    {
-        return $this->setData(self::POSTCODE, $postcode);
+        return $this->setData(self::SUPER_ATTRIBUTE, $super_attribute);
     }
 
     /**
@@ -140,17 +108,17 @@ class RequestRate extends \Magento\Framework\Api\AbstractExtensibleObject implem
     /**
      * {@inheritdoc}
      */
-    public function getProductOptions()
+    public function getShippingData()
     {
-        return $this->_get(self::PRODUCT_OPTIONS);
+        return $this->_get(self::SHIPPING_DATA);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setProductOptions($product_options)
+    public function setShippingData($shipping_data)
     {
-        return $this->setData(self::PRODUCT_OPTIONS, $product_options);
+        return $this->setData(self::SHIPPING_DATA, $shipping_data);
     }
 
     /**

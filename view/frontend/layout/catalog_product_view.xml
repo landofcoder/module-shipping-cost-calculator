@@ -12,6 +12,9 @@
         <css src="Lof_ShippingCalculator::css/styles.css"/>
     </head>
     <body>
+        <referenceBlock name="head.additional">
+            <block class="Magento\Framework\View\Element\Template" name="lofshippingcalculator.initjs" template="Lof_ShippingCalculator::head_js.phtml" />
+        </referenceBlock>
         <referenceContainer name="product.info.form.content">
             <block class="Magento\Directory\Block\Data" ifconfig="lofshippingcalculator/general/enable" before="product.info.addtocart" name="lof.shipping.estimation.simple" template="Lof_ShippingCalculator::shippingcalculator.phtml">
                 <arguments>

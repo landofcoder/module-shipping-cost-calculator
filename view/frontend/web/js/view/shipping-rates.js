@@ -6,7 +6,7 @@
 define(
     [
      	'jquery',
-        'utils',
+        'Magento_Catalog/js/price-utils',
         'mage/template'
     ],
     function ($, utils, mageTemplate) {
@@ -39,7 +39,7 @@ define(
 
         return function(config) {
             if (!config) return false;
-            if (typeof response != 'object') {
+            if (typeof config != 'object') {
                 return false;
             }
             return resultTemplate({

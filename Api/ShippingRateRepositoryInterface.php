@@ -28,8 +28,8 @@ interface ShippingRateRepositoryInterface
 {
     /**
      * POST get Shipping Rates Config
-     * @param  \Lof\ShippingCalculator\Api\Data\RequestRateDataInterface $request
-     * @return \Lof\ShippingCalculator\Api\Data\ShippingRateDataInterface[]
+     * @param  \Lof\ShippingCalculator\Api\Data\RequestRateInterface $request
+     * @return \Lof\ShippingCalculator\Api\Data\ShippingRateInterface[]
      * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function getRates($request);

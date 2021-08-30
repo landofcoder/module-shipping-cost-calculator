@@ -9,92 +9,64 @@ namespace Lof\ShippingCalculator\Api\Data;
 
 interface RequestRateInterface extends \Magento\Framework\Api\ExtensibleDataInterface
 {
-    const PRODUCT_ID = 'product_id';
-    const PRODUCT_SKU = 'product_sku';
-    const COUNTRY_ID = 'country_id';
-    const REGION_ID = 'region_id';
-    const REGION = 'region';
-    const POSTCODE = 'postcode';
+    const PRODUCT = 'product';
+    const RELATED_PRODUCT = 'related_product';
+    const SELECTED_CONFIGURABLE_OPTION = 'selected_configurable_option';
+    const SUPER_ATTRIBUTE = 'super_attribute';
     const QTY = 'qty';
-    const PRODUCT_OPTIONS = 'product_options';
+    const SHIPPING_DATA = 'shipping_data';
 
     /**
      * Get product_id
      * @return int|null
      */
-    public function getProductId();
+    public function getProduct();
 
     /**
      * Set product_id
      * @param int $product_id
      * @return \Lof\ShippingCalculator\Api\Data\RequestRateInterface
      */
-    public function setProductId($product_id);
+    public function setProduct($product_id);
 
     /**
-     * Get product_sku
+     * Get related_product
      * @return string|null
      */
-    public function getProductSku();
+    public function getRelatedProduct();
 
     /**
-     * Set product_sku
-     * @param string $product_sku
+     * Set related_product
+     * @param string $related_product
      * @return \Lof\ShippingCalculator\Api\Data\RequestRateInterface
      */
-    public function setProductSku($product_sku);
+    public function setRelatedProduct($related_product);
 
     /**
-     * Get country_id
+     * Get selected_configurable_option
      * @return string|null
      */
-    public function getCountryId();
+    public function getSelectedConfigurableOption();
 
     /**
-     * Set country_id
-     * @param string $country_id
+     * Set selected_configurable_option
+     * @param string $selected_configurable_option
      * @return \Lof\ShippingCalculator\Api\Data\RequestRateInterface
      */
-    public function setCountryId($country_id);
-
+    public function setSelectedConfigurableOption($selected_configurable_option);
+    
     /**
-     * Get region_id
+     * Get super_attribute
      * @return string|null
      */
-    public function getRegionId();
+    public function getSuperAttribute();
 
     /**
-     * Set region_id
-     * @param string $region_id
+     * Set super_attribute
+     * @param string $super_attribute
      * @return \Lof\ShippingCalculator\Api\Data\RequestRateInterface
      */
-    public function setRegionId($region_id);
-
-    /**
-     * Get region
-     * @return string|null
-     */
-    public function getRegion();
-
-    /**
-     * Set region
-     * @param string $region
-     * @return \Lof\ShippingCalculator\Api\Data\RequestRateInterface
-     */
-    public function setRegion($region);
-
-    /**
-     * Get postcode
-     * @return string|null
-     */
-    public function getPostcode();
-
-    /**
-     * Set postcode
-     * @param string $postcode
-     * @return \Lof\ShippingCalculator\Api\Data\RequestRateInterface
-     */
-    public function setPostcode($postcode);
+    public function setSuperAttribute($super_attribute);
 
     /**
      * Get qty
@@ -110,18 +82,17 @@ interface RequestRateInterface extends \Magento\Framework\Api\ExtensibleDataInte
     public function setQty($qty);
 
     /**
-     * Get product_options
-     * @return string|null
+     * Get shipping_data
+     * @return \Lof\ShippingCalculator\Api\Data\ShippingDataInterface|null
      */
-    public function getProductOptions();
+    public function getShippingData();
 
     /**
-     * Set product_options
-     * @param string $product_options
+     * Set shipping_data
+     * @param \Lof\ShippingCalculator\Api\Data\ShippingDataInterface|null
      * @return \Lof\ShippingCalculator\Api\Data\RequestRateInterface
      */
-    public function setProductOptions($product_options);
-
+    public function setShippingData($shipping_data);
     
     /**
      * Retrieve existing extension attributes object or create a new one.
