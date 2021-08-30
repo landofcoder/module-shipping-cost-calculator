@@ -1,6 +1,7 @@
 define([
     'jquery',
 	'jquery-ui-modules/widget',
+    'Lof_ShippingCalculator/js/view/shipping-rates',
 	'mage/template',
 	'Magento_Catalog/js/price-utils',
 	'Magento_Ui/js/modal/alert',
@@ -14,6 +15,7 @@ define([
 ], function(
     $, 
     jqueyUi, 
+    ShippingRateRender,
     mageTemplate, 
     utils, 
     alert, 
@@ -31,7 +33,7 @@ define([
             productFormId: '#product_addtocart_form',
             countryId: '#country',
             updateElements: '[data-update]',
-            priceTemplate: '<span class="price"><%- data.formatted %></span>',
+            //priceTemplate: '<span class="price"><%- data.formatted %></span>',
             usePriceInclucdingTax: false,
             emptyMsg: 'There are no shipping methods available for this region.',
             autoCalculate: false
@@ -43,27 +45,27 @@ define([
                 this._attacheEvents();
            }
         },
-        _getResultTemplate: function() {
-            var html =  '<div class="shipping-estimation">';
-            html +=     '<% _.each(carriers, function(carrier) { %>';
-            html +=     '<div class="shipping-item <%- carrier.carrier_code %>">';
-            html +=     '<div class="shipping-title"><%- carrier.carrier_title %></div>';
-            html +=     '<div class="shipping-detail">';
-            html +=     '<% if (carrier.error_message) { %>';
-            html +=     '<div class="shipping-cost error-msg"><%- carrier.error_message %></div>';
-            html +=     '<% } else { %>';
+        // _getResultTemplate: function() {
+        //     var html =  '<div class="shipping-estimation">';
+        //     html +=     '<% _.each(carriers, function(carrier) { %>';
+        //     html +=     '<div class="shipping-item <%- carrier.carrier_code %>">';
+        //     html +=     '<div class="shipping-title"><%- carrier.carrier_title %></div>';
+        //     html +=     '<div class="shipping-detail">';
+        //     html +=     '<% if (carrier.error_message) { %>';
+        //     html +=     '<div class="shipping-cost error-msg"><%- carrier.error_message %></div>';
+        //     html +=     '<% } else { %>';
             
-            html +=     '<div class="method-title"><%- carrier.method_title %></div>';
-            html +=     '<div class="shipping-cost price <%- usePriceInclucdingTax ? "incl-tax":"excl-tax" %>"><%- usePriceInclucdingTax ? utils.formatPrice(carrier.price_incl_tax, priceFormat) : utils.formatPrice(carrier.price_excl_tax, priceFormat) %></div>';
-            html +=     '</div>';
+        //     html +=     '<div class="method-title"><%- carrier.method_title %></div>';
+        //     html +=     '<div class="shipping-cost price <%- usePriceInclucdingTax ? "incl-tax":"excl-tax" %>"><%- usePriceInclucdingTax ? utils.formatPrice(carrier.price_incl_tax, priceFormat) : utils.formatPrice(carrier.price_excl_tax, priceFormat) %></div>';
+        //     html +=     '</div>';
             
-            html +=     '<% } %>';
-            html +=     '</div>';
-            html +=     '</div>';
-            html +=     '<% }); %>';
-            html +=     '</div>';
-            return html;
-        },
+        //     html +=     '<% } %>';
+        //     html +=     '</div>';
+        //     html +=     '</div>';
+        //     html +=     '<% }); %>';
+        //     html +=     '</div>';
+        //     return html;
+        // },
         _assignVariables: function() {
             var self = this, conf = this.options;
             this.$form = self.element.find('form').first();
@@ -86,7 +88,7 @@ define([
                     this.$qty.attr('data-name', 'qty');
                 }
                 this.productId = this.$productForm.find('[name=product]').first().val();
-                this.resultTemplate = mageTemplate(this._getResultTemplate());
+                //this.resultTemplate = mageTemplate(this._getResultTemplate());
             }
         },
         _prepareHtml: function() {
@@ -182,7 +184,6 @@ define([
                 return false;
             }
             
-            
             data.product_id =  this.productId;
             self.element.find('[data-update]').each(function() {
                 var $input = $(this);
@@ -209,16 +210,16 @@ define([
 
                 self.$loader.show();
 
-                storage.postData(
-                    url, false
+                storage.post(
+                    url, postData, false
                 ).done(function (response) {
                     if (typeof response != 'object') {
                         return false;
                     }
                     if (response.length) {
-                        self.$result.html(self.resultTemplate({
+                        self.$result.html(ShippingRateRender({
                             carriers: response,
-                            utils: utils,
+                            //utils: utils,
                             priceFormat: conf.priceFormat,
                             usePriceInclucdingTax: conf.usePriceInclucdingTax
                         }));
