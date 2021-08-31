@@ -206,10 +206,17 @@ define([
                     var url = mageurl.build(serviceUrl, {});
                     
                     self.$loader.show();
-                    
+                    var correctPostData = {
+                        "product": postData.product,
+                        "qty": postData.qty,
+                        "related_product": postData.related_product,
+                        "selected_configurable_option": postData.selected_configurable_option,
+                        "super_attribute": postData.super_attribute,
+                        "shipping_data": postData.shipping_data
+                    }
                     storage.post(
                         url, 
-                        JSON.stringify({"request": postData }), 
+                        JSON.stringify({"request": correctPostData }), 
                         false
                     ).done(function (response) {
                         self.$loader.hide();
@@ -219,7 +226,6 @@ define([
                         if (response.length) {
                             self.$result.html(ShippingRateRender({
                                 carriers: response,
-                                //utils: utils,
                                 enableCheapest: conf.enableCheapest,
                                 priceFormat: conf.priceFormat,
                                 usePriceInclucdingTax: conf.usePriceInclucdingTax
