@@ -8,6 +8,8 @@
  - [Specifications](#markdown-header-specifications)
  - [Attributes](#markdown-header-attributes)
 
+<h3>Shipping Cost Calculator in Product Page</h3>
+<img src="./assets/shipping-calculator.png" />
 
 ## Main Functionalities
 - Show Shipping Cost Calculator on Product page
@@ -43,9 +45,6 @@ Go to admin > Stores > Configuration > Landofcoder > Shipping Calculator
 If you encounter any problems or bugs, please <a href="https://github.com/landofcoder/module-shipping-cost-calculator/issues">open an issue</a> on GitHub.
 
 # Screenshots
-
-<h3>Shipping Cost Calculator in Product Page</h3>
-<img src="./assets/shipping-calculator.png" />
 
 <h3>Configuration</h3>
 <img src="./assets/module-config.png" />
