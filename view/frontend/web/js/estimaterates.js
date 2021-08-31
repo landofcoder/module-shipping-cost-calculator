@@ -226,7 +226,6 @@ define([
                         if (response.length) {
                             self.$result.html(ShippingRateRender({
                                 carriers: response,
-                                //utils: utils,
                                 enableCheapest: conf.enableCheapest,
                                 priceFormat: conf.priceFormat,
                                 usePriceInclucdingTax: conf.usePriceInclucdingTax
